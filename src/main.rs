@@ -69,7 +69,8 @@ impl event::EventHandler<ggez::GameError> for MainState {
 }
 
 fn main() -> GameResult {
-    let context_builder = ggez::ContextBuilder::new("nose", "Franco");
+    let context_builder = ggez::ContextBuilder::new("nose", "Franco")
+    .window_setup(ggez::conf::WindowSetup::default().title("Click On It"));
     let (ctx, event_loop) = context_builder.build()?;
     let state = MainState::new()?;
 
