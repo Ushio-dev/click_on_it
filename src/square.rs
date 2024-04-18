@@ -1,9 +1,9 @@
 use ggez::graphics::Color;
 
 pub struct Square {
-    color: Color,
-    pos_x: f32,
-    pos_y: f32,
-    width: f32,
-    height: f32,
+    pub color: Color,
+    pub pos_x: f32,
+    pub pos_y: f32,
+    pub width: f32,
+    pub height: f32,
 }
