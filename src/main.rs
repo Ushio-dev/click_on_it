@@ -9,6 +9,7 @@ use square::Square;
 
 struct MainState {
     squares: Vec<Square>,
+    speed: f32
 }
 
 impl MainState {
@@ -17,7 +18,7 @@ impl MainState {
         let an_square = Square::new(_ctx)?;
         objects.push(an_square);
 
-        let s = MainState { squares: objects };
+        let s = MainState { squares: objects, speed: 0.5 };
 
         Ok(s)
     }
@@ -26,7 +27,7 @@ impl MainState {
 impl event::EventHandler<ggez::GameError> for MainState {
     fn update(&mut self, _ctx: &mut ggez::Context) -> Result<(), ggez::GameError> {
         for _sqr in &mut self.squares {
-            _sqr.pos_y = _sqr.pos_y + 1.;
+            _sqr.pos_y = _sqr.pos_y + self.speed;
             _sqr.rect.x = _sqr.pos_x;
             _sqr.rect.y = _sqr.pos_y;
         }
@@ -70,6 +71,7 @@ impl event::EventHandler<ggez::GameError> for MainState {
         }
         
         if to_add {
+            self.speed = self.speed + 0.02;
             let new_square: Square;
             new_square = Square::new(_ctx)?;
             self.squares.remove(index);
