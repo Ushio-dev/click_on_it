@@ -1,4 +1,5 @@
 mod square;
+mod colors;
 
 use ggez::{
     event::{self, MouseButton},
@@ -55,22 +56,24 @@ impl event::EventHandler<ggez::GameError> for MainState {
         _y: f32,
     ) -> Result<(), ggez::GameError> {
         let mut to_add = false;  
+        let mut index = 0;
         
-        for _sqr in &self.squares {
+        for (_i, _sqr) in self.squares.iter().enumerate() {
             if _button == MouseButton::Left {
                 //println!("Click!");
                 let point = _sqr.rect.contains([_x, _y]);
                 if point {
-                    println!("Click!");
+                    index = _i;
                     to_add = true;
                     break;
                 }
             }
         }
-
+        
         if to_add {
             let new_square: Square;
             new_square = Square::new(_ctx)?;
+            self.squares.remove(index);
             self.squares.push(new_square);
         }
 
