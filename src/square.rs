@@ -1,4 +1,4 @@
-use ggez::{glam::Vec2, graphics::{self, Color}, GameResult};
+use ggez::{glam::Vec2, graphics::Color, GameResult};
 use rand::prelude::*;
 
 pub struct Square {
