@@ -78,7 +78,6 @@ impl event::EventHandler<ggez::GameError> for MainState {
     }
 }
 
-// TODO: Modificar toda el struct square para que reciba un Rect o Mesh, ya vere
 fn main() -> GameResult {
     let context_builder = ggez::ContextBuilder::new("nose", "Franco")
         .window_setup(ggez::conf::WindowSetup::default().title("Click On It"))
