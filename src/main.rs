@@ -119,8 +119,17 @@ impl event::EventHandler<ggez::GameError> for MainState {
 
 fn main() -> GameResult {
     let context_builder = ggez::ContextBuilder::new("nose", "Franco")
-        .window_setup(ggez::conf::WindowSetup::default().title("Click On It"))
-        .window_mode(ggez::conf::WindowMode::default().dimensions(640., 400.));
+        .window_setup(
+            ggez::conf::WindowSetup::default()
+                .title("Click On It")
+                .vsync(true),
+        )
+        .window_mode(
+            ggez::conf::WindowMode::default()
+                .dimensions(640., 400.)
+                .fullscreen_type(ggez::conf::FullscreenType::Windowed)
+                .max_dimensions(640., 400.),
+        );
     let (mut ctx, event_loop) = context_builder.build()?;
     let state = MainState::new(&mut ctx)?;
 
