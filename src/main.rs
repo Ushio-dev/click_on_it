@@ -1,5 +1,4 @@
 mod square;
-mod colors;
 
 use ggez::{
     event::{self, MouseButton},
