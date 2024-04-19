@@ -2,14 +2,19 @@ mod square;
 
 use ggez::{
     event::{self, MouseButton},
-    graphics::{self},
-    Context, GameResult
+    graphics::{self, TextLayout},
+    Context, GameResult,
 };
 use square::Square;
 
+enum GameState {
+    Playing,
+    GameOver,
+}
 struct MainState {
     squares: Vec<Square>,
-    speed: f32
+    speed: f32,
+    state: GameState,
 }
 
 impl MainState {
@@ -18,7 +23,11 @@ impl MainState {
         let an_square = Square::new(_ctx)?;
         objects.push(an_square);
 
-        let s = MainState { squares: objects, speed: 0.5 };
+        let s = MainState {
+            squares: objects,
+            speed: 0.5,
+            state: GameState::Playing,
+        };
 
         Ok(s)
     }
@@ -26,11 +35,23 @@ impl MainState {
 
 impl event::EventHandler<ggez::GameError> for MainState {
     fn update(&mut self, _ctx: &mut ggez::Context) -> Result<(), ggez::GameError> {
-        for _sqr in &mut self.squares {
-            _sqr.pos_y = _sqr.pos_y + self.speed;
-            _sqr.rect.x = _sqr.pos_x;
-            _sqr.rect.y = _sqr.pos_y;
+        match self.state {
+            GameState::Playing => {
+                for _sqr in &mut self.squares {
+                    _sqr.pos_y = _sqr.pos_y + self.speed;
+                    _sqr.rect.x = _sqr.pos_x;
+                    _sqr.rect.y = _sqr.pos_y;
+
+                    if _sqr.pos_y >= 400. {
+                        self.state = GameState::GameOver;
+                    }
+                }
+            }
+            GameState::GameOver => {
+                self.squares.clear();
+            }
         }
+
         Ok(())
     }
 
@@ -38,13 +59,27 @@ impl event::EventHandler<ggez::GameError> for MainState {
         let mut canvas =
             graphics::Canvas::from_frame(_ctx, graphics::Color::from([0.1, 0.2, 0.3, 1.0]));
 
-        for _sqr in &self.squares {
-            _sqr.draw(&mut canvas);
+        match self.state {
+            GameState::Playing => {
+                for _sqr in &self.squares {
+                    _sqr.draw(&mut canvas);
+                }
+            }
+            GameState::GameOver => {
+                canvas.draw(
+                    graphics::Text::new("Game Over")
+                        .set_scale(48.)
+                        .set_layout(TextLayout {
+                            h_align: graphics::TextAlign::Middle,
+                            v_align: graphics::TextAlign::Middle,
+                        }),
+                    graphics::DrawParam::default().dest([640. / 2., 400. / 2.]),
+                );
+            }
         }
 
-        //println!("X: {}, Y: {}", self.squares[0].rect.point().x,self.squares[0].rect.point().y);
         canvas.finish(_ctx)?;
-        
+
         Ok(())
     }
 
@@ -55,9 +90,9 @@ impl event::EventHandler<ggez::GameError> for MainState {
         _x: f32,
         _y: f32,
     ) -> Result<(), ggez::GameError> {
-        let mut to_add = false;  
+        let mut to_add = false;
         let mut index = 0;
-        
+
         for (_i, _sqr) in self.squares.iter().enumerate() {
             if _button == MouseButton::Left {
                 //println!("Click!");
@@ -69,9 +104,9 @@ impl event::EventHandler<ggez::GameError> for MainState {
                 }
             }
         }
-        
+
         if to_add {
-            self.speed = self.speed + 0.02;
+            self.speed = self.speed + 0.03;
             let new_square: Square;
             new_square = Square::new(_ctx)?;
             self.squares.remove(index);
