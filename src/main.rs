@@ -15,6 +15,7 @@ struct MainState {
     squares: Vec<Square>,
     speed: f32,
     state: GameState,
+    score: i32,
 }
 
 impl MainState {
@@ -27,6 +28,7 @@ impl MainState {
             squares: objects,
             speed: 0.5,
             state: GameState::Playing,
+            score: 0,
         };
 
         Ok(s)
@@ -58,9 +60,16 @@ impl event::EventHandler<ggez::GameError> for MainState {
     fn draw(&mut self, _ctx: &mut ggez::Context) -> Result<(), ggez::GameError> {
         let mut canvas =
             graphics::Canvas::from_frame(_ctx, graphics::Color::from([0.1, 0.2, 0.3, 1.0]));
-
+        let text_score = format!("Score: {}", self.score);
         match self.state {
             GameState::Playing => {
+                canvas.draw(graphics::Text::new(text_score).set_scale(20.).set_layout(
+                    TextLayout {
+                        h_align: graphics::TextAlign::Begin,
+                        v_align: graphics::TextAlign::Begin,
+                    }),
+                    graphics::DrawParam::default().dest([5.,5.]),
+                );
                 for _sqr in &self.squares {
                     _sqr.draw(&mut canvas);
                 }
@@ -74,6 +83,13 @@ impl event::EventHandler<ggez::GameError> for MainState {
                             v_align: graphics::TextAlign::Middle,
                         }),
                     graphics::DrawParam::default().dest([640. / 2., 400. / 2.]),
+                );
+                canvas.draw(graphics::Text::new(text_score).set_scale(30.).set_layout(
+                    TextLayout {
+                        h_align: graphics::TextAlign::Middle,
+                        v_align: graphics::TextAlign::Middle,
+                    }),
+                    graphics::DrawParam::default().dest([640. / 2., (400. / 2.)+ 50.]),
                 );
             }
         }
@@ -106,6 +122,7 @@ impl event::EventHandler<ggez::GameError> for MainState {
 
         if to_add {
             self.speed = self.speed + 0.03;
+            self.score += 5;
             let new_square: Square;
             new_square = Square::new(_ctx)?;
             self.squares.remove(index);
