@@ -1,4 +1,4 @@
-use ggez::{glam::Vec2, graphics::{self, Color}, GameResult};
+use ggez::{glam::Vec2, graphics::Color, GameResult};
 use rand::prelude::*;
 
 pub struct Square {
@@ -14,12 +14,21 @@ pub struct Square {
 impl Square {
     pub fn new(_ctx: &mut ggez::Context) -> GameResult<Square> {
         let random = rand::thread_rng().gen_range(100..540) as f32;
+        let random_color = rand::thread_rng().gen_range(1..=3);
+        let color = match random_color {
+            1 => ggez::graphics::Color::RED,
+
+            2 => ggez::graphics::Color::GREEN,
+            3 => ggez::graphics::Color::YELLOW,
+            _ => ggez::graphics::Color::WHITE,
+        };
+
         let rect = ggez::graphics::Rect::new(0., 0., 80., 80.);
         let mesh = ggez::graphics::Mesh::new_rectangle(
             _ctx, 
             ggez::graphics::DrawMode::fill(),
             rect, 
-            graphics::Color::RED,
+            color,
         )?;
 
         Ok(Square { 
