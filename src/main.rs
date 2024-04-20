@@ -95,7 +95,6 @@ impl event::EventHandler<ggez::GameError> for MainState {
 
         for (_i, _sqr) in self.squares.iter().enumerate() {
             if _button == MouseButton::Left {
-                //println!("Click!");
                 let point = _sqr.rect.contains([_x, _y]);
                 if point {
                     index = _i;
